@@ -3,7 +3,7 @@ project (urdfdom CXX C)
 
 set (URDF_MAJOR_VERSION 1)
 set (URDF_MINOR_VERSION 0)
-set (URDF_PATCH_VERSION 0)
+set (URDF_PATCH_VERSION 4)
 
 set (URDF_VERSION ${URDF_MAJOR_VERSION}.${URDF_MINOR_VERSION}.${URDF_PATCH_VERSION})
 set (URDF_MAJOR_MINOR_VERSION ${URDF_MAJOR_VERSION}.${URDF_MINOR_VERSION})
@@ -42,10 +42,10 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 
-find_package(console_bridge_vendor REQUIRED) # Provides console_bridge 0.4.0 on platforms without it.
+find_package(console_bridge_vendor REQUIRED)
 find_package(console_bridge REQUIRED)
 
-#In Visual Studio a special postfix for 
+#In Visual Studio a special postfix for
 #libraries compiled in debug is used
 if(MSVC)
 set(CMAKE_DEBUG_POSTFIX "d")
@@ -90,6 +90,11 @@ if (NOT MSVC)
   install(FILES ${CMAKE_BINARY_DIR}/${pkg_conf_file}
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/ COMPONENT pkgconfig)
 endif()
+
+# Add uninstall target
+# Ref: http://www.cmake.org/Wiki/CMake_FAQ#Can_I_do_.22make_uninstall.22_with_CMake.3F
+configure_file("${PROJECT_SOURCE_DIR}/cmake/uninstall.cmake.in" "${PROJECT_BINARY_DIR}/uninstall.cmake" IMMEDIATE @ONLY)
+add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/uninstall.cmake")
 
 message(STATUS "Configuration successful. Type make to compile urdfdom")
 
